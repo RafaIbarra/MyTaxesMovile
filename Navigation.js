@@ -8,16 +8,17 @@ const HomeStack = createNativeStackNavigator();
 
 function HomeStackGroup() {
   return (
-    <HomeStack.Navigator initialRouteName="QRScanner">
+    <HomeStack.Navigator initialRouteName="Detalles">
+      <HomeStack.Screen
+        name="Detalles"
+        component={Detalles}
+      />
     <HomeStack.Screen
         name="QRScanner"
         component={QRScanner}
         options={{ headerShown: false }}
     />
-      <HomeStack.Screen
-        name="Detalles"
-        component={Detalles}
-      />
+      
     </HomeStack.Navigator>
   );
 }
