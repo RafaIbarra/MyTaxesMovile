@@ -1,8 +1,9 @@
 import React, { useState, useEffect,useContext } from 'react';
-import { View, Text, Button, StyleSheet, Alert,ActivityIndicator  } from 'react-native';
+import { View, Text, Button, StyleSheet, Alert,ActivityIndicator,TouchableOpacity   } from 'react-native';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import { AuthContext } from '../AuthContext';
 import { useNavigation } from "@react-navigation/native";
+import SimpleLineIcons from '@expo/vector-icons/SimpleLineIcons';
 function QRScanner({ navigation }) {
   const [permission, requestPermission] = useCameraPermissions();
   const [scanning, setScanning] = useState(false);
@@ -48,6 +49,8 @@ function QRScanner({ navigation }) {
         const dataFetched = await response.json(); // Asegúrate de que el backend devuelva JSON
         // console.log("Datos obtenidos:", dataFetched);
         actualizarEstadocomponente('datositem',dataFetched['datos'])
+        
+        actualizarEstadocomponente('datourl',dataFetched['url'])
         navigate("Detalles")
         setScannedData(dataFetched['url']); // Guarda los datos para mostrarlos en la app
   
@@ -82,17 +85,19 @@ function QRScanner({ navigation }) {
                 <Text style={styles.waitingText}>Detectado, esperando datos...</Text>
               </View>
             )}
+            <TouchableOpacity 
+              style={styles.closeIcon} 
+              onPress={() => setScanning(false)}
+            >
+              <SimpleLineIcons name="close" size={40} color="red" />
+            </TouchableOpacity>
           </View>
-          <Button title="Detener Escaneo" onPress={() => setScanning(false)} />
+          {/* <Button title="Detener Escaneo" onPress={() => setScanning(false)} /> */}
           
         </>
       )}
   
-      {scannedData && ( // Muestra el texto solo si hay datos escaneados
-        <Text style={styles.scannedText}>
-          Código QR Escaneado: {scannedData}
-        </Text>
-      )}
+      
     </View>
   );
 };
@@ -136,6 +141,12 @@ const styles = StyleSheet.create({
     fontSize: 25,
     textAlign: 'center', // Centra el texto
     fontWeight:'bold'
+  },
+  closeIcon: {
+    position: 'absolute',
+    top: 40,
+    right: 20,
+    zIndex: 1, // Asegura que el icono esté al frente
   },
 });
 export default QRScanner;

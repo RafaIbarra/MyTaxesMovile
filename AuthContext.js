@@ -6,7 +6,7 @@ export const AuthProvider = ({ children }) => {
     const [estadocomponente,setEstadocomponente]=useState({
         
         datositem:[],
-    
+        datourl:[]
         
     
       })
