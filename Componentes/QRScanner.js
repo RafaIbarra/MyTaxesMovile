@@ -1,9 +1,12 @@
 import React, { useState, useEffect,useContext } from 'react';
-import { View, Text, Button, StyleSheet, Alert,ActivityIndicator,TouchableOpacity   } from 'react-native';
+import { View, Text,  StyleSheet, Alert,ActivityIndicator,TouchableOpacity   } from 'react-native';
 import { CameraView, useCameraPermissions } from 'expo-camera';
+import { Button } from 'react-native-paper';
 import { AuthContext } from '../AuthContext';
 import { useNavigation } from "@react-navigation/native";
 import SimpleLineIcons from '@expo/vector-icons/SimpleLineIcons';
+import Fontisto from '@expo/vector-icons/Fontisto';
+import FontAwesome from '@expo/vector-icons/FontAwesome';
 function QRScanner({ navigation }) {
   const [permission, requestPermission] = useCameraPermissions();
   const [scanning, setScanning] = useState(false);
@@ -67,8 +70,20 @@ function QRScanner({ navigation }) {
     <View style={styles.container}>
       {!scanning ? (
         <>
-          <Text>iniciar el escaneo del QR</Text>
-          <Button title="Iniciar Escaneo" onPress={startScanning} />
+          <Fontisto name="qrcode" style={styles.qrIcon} />
+          {/* <Button title="Iniciar Escaneo" onPress={startScanning} /> */}
+          <Button  style={{ marginTop: 10,marginBottom: 10,backgroundColor: 'rgba(44,148,228,0.7)',width: 70,height: 70,marginLeft: '45%',
+                            justifyContent: 'center', alignItems: 'center', paddingLeft:15}}  
+                  icon={() => {
+                    // return <MaterialCommunityIcons name="content-save-check" size={30} color="white" />
+                    return <FontAwesome name="camera-retro" size={45} color="white" />
+                  }}
+                  mode="elevated" 
+                  textColor="white"
+                  onPress={startScanning}
+                  >
+                             
+            </Button>
          
         </>
       ) : (
@@ -148,5 +163,12 @@ const styles = StyleSheet.create({
     right: 20,
     zIndex: 1, // Asegura que el icono esté al frente
   },
+  
+  qrIcon: {
+    fontSize: 250, // Ajusta el tamaño según lo necesario
+    color: '#000', // Cambia el color si es necesario
+    marginBottom: 20, // Añade espacio debajo del ícono
+    marginLeft:'20%'
+  }
 });
 export default QRScanner;
