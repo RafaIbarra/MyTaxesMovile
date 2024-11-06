@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext,useState } from 'react';
 import {  View,Text,StyleSheet,Linking,TouchableOpacity,TextInput,ScrollView   } from "react-native";
 import { Button } from 'react-native-paper';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -10,10 +10,14 @@ import { PermissionsAndroid, Alert } from 'react-native';
 
 function Detalles({ navigation }){
      const { estadocomponente } = useContext(AuthContext);
+     const [nombrecdc,setNombrecdc]=useState('')
 
      const handleOpenUrl = () => {
         const url = estadocomponente.datourl;
+        nombrearc=estadocomponente.datositem.cdc+'.xml'
+        setNombrecdc(nombrearc)
         Linking.openURL(url).catch((err) => console.error("No se pudo abrir la URL:", err));
+        
       };
       const registrar_egreso=()=>{
         console.log('hola')
@@ -47,7 +51,8 @@ function Detalles({ navigation }){
       
           // Ruta de la carpeta de descargas en el almacenamiento externo de Android
           const downloadDirectory = RNFS.ExternalStorageDirectoryPath + '/Download/';
-          const filePath = `${downloadDirectory}01800319702001005008254822024103013609116639.xml`;
+          // const filePath = `${downloadDirectory}01800319702001005008254822024103013609116639.xml`;
+          const filePath = `${downloadDirectory}${nombrecdc}`;
       
           // Verifica si el archivo existe
           const fileExists = await RNFS.exists(filePath);
