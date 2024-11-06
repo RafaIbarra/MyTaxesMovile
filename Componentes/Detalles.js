@@ -4,6 +4,10 @@ import { Button } from 'react-native-paper';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { AuthContext } from '../AuthContext';
 
+import RNFS from 'react-native-fs'; // Importar react-native-fs
+import { PermissionsAndroid, Alert } from 'react-native';
+
+
 function Detalles({ navigation }){
      const { estadocomponente } = useContext(AuthContext);
 
@@ -15,6 +19,83 @@ function Detalles({ navigation }){
         console.log('hola')
 
       }
+      const requestPermissions = async () => {
+        try {
+          const granted = await PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+            {
+              title: "Permiso de almacenamiento",
+              message: "Necesitamos acceso al almacenamiento para buscar el archivo",
+              buttonNeutral: "Preguntar después",
+              buttonNegative: "Cancelar",
+              buttonPositive: "Aceptar",
+            }
+          );
+          if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+            console.log("Permiso otorgado para acceder a los archivos");
+          } else {
+            console.log("Permiso denegado");
+          }
+        } catch (err) {
+          console.warn(err);
+        }
+      };
+      const buscarArchivo = async () => {
+        try {
+          // Solicitar permisos antes de acceder
+          await requestPermissions();
+      
+          // Ruta de la carpeta de descargas en el almacenamiento externo de Android
+          const downloadDirectory = RNFS.ExternalStorageDirectoryPath + '/Download/';
+          const filePath = `${downloadDirectory}01800319702001005008254822024103013609116639.xml`;
+      
+          // Verifica si el archivo existe
+          const fileExists = await RNFS.exists(filePath);
+      
+          if (fileExists) {
+            console.log("Archivo encontrado", filePath);
+            Alert.alert('Archivo encontrado', `Ruta: ${filePath}`);
+          } else {
+            console.log("Archivo no encontrado");
+            Alert.alert('Archivo no encontrado');
+          }
+        } catch (error) {
+          console.error("Error al buscar archivo:", error);
+          Alert.alert('Error al buscar archivo', error.message);
+        }
+      };
+
+      // const buscarArchivoEnDescargas = async () => {
+      //   try {
+      //     // Solicita permisos para acceder al almacenamiento externo
+      //     const permissions = await FileSystem.StorageAccessFramework.requestDirectoryPermissionsAsync();
+          
+      //     if (!permissions.granted) {
+      //       console.log('Permiso denegado');
+      //       return;
+      //     }
+      
+      //     // Accede al URI de la carpeta de descargas elegida por el usuario
+      //     const directoryUri = permissions.directoryUri;
+      
+      //     // Lista los archivos en la carpeta de descargas
+      //     const archivos = await FileSystem.StorageAccessFramework.readDirectoryAsync(directoryUri);
+      //     console.log('Archivos en la carpeta seleccionada:', archivos);
+      
+      //     // Busca el archivo específico
+      //     const fileName = '01800319702001005008254822024103013609116639.xml';
+      //     const archivoEncontrado = archivos.find((archivoUri) => archivoUri.endsWith(fileName));
+      
+      //     if (archivoEncontrado) {
+      //       Alert.alert('Archivo encontrado', `Ruta: ${archivoEncontrado}`);
+      //     } else {
+      //       Alert.alert('Archivo no encontrado en la carpeta seleccionada');
+      //     }
+      //   } catch (error) {
+      //     console.error('Error buscando archivos:', error);
+      //     Alert.alert('Error buscando archivos', error.message);
+      //   }
+      // };
     
     return(
         <ScrollView style={{marginLeft:20,marginRight:5,marginTop:5}}>
@@ -64,7 +145,7 @@ function Detalles({ navigation }){
                             }}
                             mode="elevated" 
                             textColor="white"
-                            onPress={registrar_egreso}
+                            onPress={buscarArchivo}
                             >
                             REGISTRAR 
             </Button>
