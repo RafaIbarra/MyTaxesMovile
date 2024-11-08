@@ -4,6 +4,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Detalles from "./Componentes/Detalles";
 import QRScanner from "./Componentes/QRScanner";
+import DetalleXml from "./Componentes/DetalleXml";
 
 import ListadoFacturas from "./Componentes/ListadoFacturas";
 import ResumenMes from "./Componentes/ResumenMes";
@@ -100,6 +101,7 @@ function MainNavigator() {
       <Stack.Screen name="MainTabs" component={MainTabs} options={{headerShown: false}}/>
       <Stack.Screen name="OpcionesCarga" component={OpcionesCargaTabs} options={{title: 'Opciones de carga'}} />
       <Stack.Screen name="Detalles" component={Detalles} options={{title: 'Detalles'}} />
+      <Stack.Screen name="DetalleXml" component={DetalleXml} options={{title: 'DetalleXml'}} />
     </Stack.Navigator>
   );
 }

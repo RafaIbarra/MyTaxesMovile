@@ -48,11 +48,13 @@ function Detalles({ navigation }){
         try {
           // Solicitar permisos antes de acceder
           await requestPermissions();
-      
+          
+          const nombrearc=estadocomponente.datositem.cdc+'.xml'
           // Ruta de la carpeta de descargas en el almacenamiento externo de Android
           const downloadDirectory = RNFS.ExternalStorageDirectoryPath + '/Download/';
           // const filePath = `${downloadDirectory}01800319702001005008254822024103013609116639.xml`;
-          const filePath = `${downloadDirectory}${nombrecdc}`;
+          console.log(nombrecdc)
+          const filePath = `${downloadDirectory}${nombrearc}`;
       
           // Verifica si el archivo existe
           const fileExists = await RNFS.exists(filePath);
@@ -60,6 +62,42 @@ function Detalles({ navigation }){
           if (fileExists) {
             console.log("Archivo encontrado", filePath);
             Alert.alert('Archivo encontrado', `Ruta: ${filePath}`);
+
+            try {
+                  
+                  
+                  // Lee el archivo en formato base64
+                  const file = await RNFS.readFile(filePath, 'base64');
+              
+                  // Crea una instancia de FormData
+                  const formData = new FormData();
+                  formData.append('file', {
+                    uri: 'file://' + filePath,
+                    name: nombrearc,
+                    type: 'text/xml',  // Asegúrate de que el tipo coincida
+                  });
+              
+                  // Realiza la solicitud `POST`
+                  const response = await fetch('https://tax.rafaelibarra.xyz/api/LecturaArchivoXml/', {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'multipart/form-data',
+                    },
+                    body: formData,
+                  });
+              
+                  const jsonResponse = await response.json();
+                  console.log("Respuesta del servidor:", jsonResponse);
+              
+                } catch (error) {
+                  console.error("Error al enviar el archivo XML:", error);
+                }
+
+
+
+
+
+            
           } else {
             console.log("Archivo no encontrado");
             Alert.alert('Archivo no encontrado');

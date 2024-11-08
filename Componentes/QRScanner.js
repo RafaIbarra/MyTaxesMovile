@@ -1,5 +1,5 @@
 import React, { useState, useEffect,useContext } from 'react';
-import { View, Text,  StyleSheet, Alert,ActivityIndicator,TouchableOpacity   } from 'react-native';
+import { View, Text,  StyleSheet, Alert,ActivityIndicator,TouchableOpacity,Linking   } from 'react-native';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import { Button } from 'react-native-paper';
 import { AuthContext } from '../AuthContext';
@@ -54,7 +54,9 @@ function QRScanner({ navigation }) {
         actualizarEstadocomponente('datositem',dataFetched['datos'])
         
         actualizarEstadocomponente('datourl',dataFetched['url'])
-        navigate("Detalles")
+        const url=dataFetched['url']
+        Linking.openURL(url).catch((err) => console.error("No se pudo abrir la URL:", err));
+        navigate("DetalleXml")
         setScannedData(dataFetched['url']); // Guarda los datos para mostrarlos en la app
   
       } catch (error) {
